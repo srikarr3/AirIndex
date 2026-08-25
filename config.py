@@ -12,9 +12,13 @@ DATA_GOV_IN_API_KEY = os.getenv("DATA_GOV_IN_API_KEY")
 if not DATA_GOV_IN_API_KEY:
     try:
         import streamlit as st
-        DATA_GOV_IN_API_KEY = st.secrets.get("DATA_GOV_IN_API_KEY")
+        if hasattr(st, "secrets") and "DATA_GOV_IN_API_KEY" in st.secrets:
+            DATA_GOV_IN_API_KEY = st.secrets["DATA_GOV_IN_API_KEY"]
     except Exception:
         pass
+
+if not DATA_GOV_IN_API_KEY:
+    DATA_GOV_IN_API_KEY = "579b464db66ec23bdd000001fe81cc9be92741a86330c02f3f0e1586"
 
 RESOURCE_ID = os.getenv("RESOURCE_ID", "3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69")
 BASE_API_URL = f"https://api.data.gov.in/resource/{RESOURCE_ID}"

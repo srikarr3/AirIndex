@@ -69,8 +69,8 @@ def parse_last_update(date_str):
 
 def fetch_all_bulk_records():
     """Fetches all India real-time AQI records in bulk pages from CPCB API."""
-    if not DATA_GOV_IN_API_KEY:
-        raise ValueError("DATA_GOV_IN_API_KEY is missing in environment variables.")
+    from config import DATA_GOV_IN_API_KEY
+    api_key = DATA_GOV_IN_API_KEY or "579b464db66ec23bdd000001fe81cc9be92741a86330c02f3f0e1586"
 
     session = get_resilient_session()
     all_records = []
@@ -79,7 +79,7 @@ def fetch_all_bulk_records():
 
     while True:
         params = {
-            "api-key": DATA_GOV_IN_API_KEY,
+            "api-key": api_key,
             "format": "json",
             "limit": limit,
             "offset": offset
