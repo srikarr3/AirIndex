@@ -684,7 +684,7 @@ if selected_city.startswith("None ("):
     max_cpcb_ist = (pd.to_datetime(max_cpcb_raw) + pd.Timedelta(hours=5, minutes=30)) if pd.notnull(max_cpcb_raw) else datetime.now()
     
     max_ing_raw = summary_data.get('max_ingested_at')
-    max_ing_ist = pd.to_datetime(max_ing_raw) if pd.notnull(max_ing_raw) else datetime.now()
+    max_ing_ist = (pd.to_datetime(max_ing_raw) + pd.Timedelta(hours=5, minutes=30)) if pd.notnull(max_ing_raw) else datetime.now()
     
     scope_label = "National" if selected_state == "All States (India)" else selected_state
     
@@ -858,7 +858,7 @@ else:
         utc_ts = pd.to_datetime(latest_data['hour_ts'])
         ist_ts = utc_ts + pd.Timedelta(hours=5, minutes=30)
         ingested_raw = latest_data['max_ingested_at']
-        ingested_ist = pd.to_datetime(ingested_raw) if pd.notnull(ingested_raw) else datetime.now()
+        ingested_ist = (pd.to_datetime(ingested_raw) + pd.Timedelta(hours=5, minutes=30)) if pd.notnull(ingested_raw) else datetime.now()
         
         cat_badge_class = f"badge-{cat_val.replace(' ', '')}"
 
