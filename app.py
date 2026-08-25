@@ -588,11 +588,14 @@ state_map, all_cities = load_states_and_cities()
 
 if not all_cities:
     st.info("⚡ **Initializing Live AirIndex Database**: Auto-ingesting latest CPCB air quality readings...")
-    ingest_aqi_data()
-    update_dim_stations()
-    dbt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "dbt_airindex"))
-    subprocess.run(["dbt", "run", "--profiles-dir", "."], cwd=dbt_dir, capture_output=True, text=True)
-    run_genai_advisories()
+    try:
+        ingest_aqi_data()
+        update_dim_stations()
+        dbt_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "dbt_airindex"))
+        subprocess.run(["dbt", "run", "--profiles-dir", "."], cwd=dbt_dir, capture_output=True, text=True)
+        run_genai_advisories()
+    except Exception as e:
+        print(f"Initialization notice: {e}")
     st.cache_data.clear()
     state_map, all_cities = load_states_and_cities()
 

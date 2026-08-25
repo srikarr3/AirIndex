@@ -3,9 +3,15 @@ import duckdb
 from config import DUCKDB_PATH
 
 def get_db_connection(db_path: str = DUCKDB_PATH, read_only: bool = False):
-    """Establishes and returns a connection to the DuckDB database."""
-    conn = duckdb.connect(db_path, read_only=read_only)
-    return conn
+    """Establishes and returns a connection to DuckDB with retry handling for file locks."""
+    import time
+    for attempt in range(5):
+        try:
+            return duckdb.connect(db_path, read_only=read_only)
+        except Exception as e:
+            if attempt == 4:
+                raise e
+            time.sleep(0.5)
 
 def init_db(db_path: str = DUCKDB_PATH):
     """
