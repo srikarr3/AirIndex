@@ -54,27 +54,6 @@ python run_pipeline.py
 streamlit run app.py
 ```
 
----
-
-## 🎯 Technical Interview Q&A & System Design Defense
-
-When evaluating or discussing this project during technical interviews, the following architectural choices demonstrate real-world data engineering best practices:
-
-### Q1: Why is dbt running out-of-band in Airflow, but available as a Streamlit button?
-> **Answer**: In an enterprise web architecture, web apps are decoupled read-only serving layers that read transformed data from analytical databases (DuckDB/Snowflake/BigQuery). Ingestion and dbt transformations run asynchronously out-of-band via Apache Airflow (`dags/aqi_ingestion_dag.py`) on an hourly schedule. The sidebar *"On-Demand Live Refresh"* button is provided strictly as a local demo convenience to trigger live CPCB API fetches and dbt model execution inside interactive reviewer sessions without requiring an Airflow server running locally.
-
-### Q2: How do you handle DuckDB ephemeral storage on free-tier Streamlit Community Cloud?
-> **Answer**: Free-tier cloud app servers reset their local filesystem when instances sleep or redeploy. AirIndex uses a two-pronged resilience strategy:
-> 1. **Automated GitHub Actions Cron**: `.github/workflows/pipeline.yml` runs hourly, executes `run_pipeline.py`, and automatically commits updated `airindex.duckdb` snapshots back to `main`.
-> 2. **Cold Boot Seed Bootstrapping**: `src/seed_loader.py` checks for database initialization on app startup. If tables are empty, it immediately seeds baseline station dimension metadata so national overview maps and historical charts render instantly.
-
-### Q3: Where is pollutant unit conversion handled (e.g. CO values)?
-> **Answer**: All unit conversions (such as converting raw CPCB API Carbon Monoxide values from µg/m³ to mg/m³) are strictly handled at the **dbt staging layer** (`dbt_airindex/models/staging/stg_aqi_readings.sql`). The Python rendering layer (`ui/`) does zero unit hacking, consuming clean, pre-normalized data directly from transformed staging/intermediate models.
-
-### Q4: What is the methodology behind the Cigarette Equivalence metric?
-> **Answer**: Cigarette equivalence is calculated using the **Berkeley Earth** rule-of-thumb model (*1 cigarette ≈ 22 µg/m³ of PM₂.₅ over 24-hour continuous exposure*). The dashboard explicitly includes interactive methodology popovers explaining that while this serves as an intuitive visual communication metric for public health risk, active cigarette smoking involves distinct combustion carcinogens.
-
----
 
 ## 📖 Official CPCB AQI Breakpoint Matrix & Data Sources
 
