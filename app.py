@@ -10,7 +10,6 @@ from ui.data import (
 from ui.components.header import render_header
 from ui.components.overview import render_overview
 from ui.components.city_detail import render_city_detail
-from ui.components.architecture_drawer import render_architecture_drawer
 
 # -----------------------------------------------------------------------------
 # 1. Page Configuration & Theme Initialization
@@ -107,16 +106,7 @@ st.sidebar.info(
     "*Timezone*: Raw CPCB API UTC batch (`05:00 UTC`) converts to `10:30 AM IST`."
 )
 
-# -----------------------------------------------------------------------------
-# 5. Dynamic Dashboard Router (Overview Mode vs. City Detail Mode)
-# -----------------------------------------------------------------------------
 if selected_city.startswith("None ("):
     render_overview(selected_state)
 else:
     render_city_detail(selected_city, all_cities)
-
-# -----------------------------------------------------------------------------
-# 6. Architecture & System Design Drawer (Interview Q&A Guide)
-# -----------------------------------------------------------------------------
-st.markdown("---")
-render_architecture_drawer()
