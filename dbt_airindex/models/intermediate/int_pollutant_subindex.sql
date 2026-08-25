@@ -13,12 +13,7 @@ normalized_stg AS (
         station,
         pollutant_id,
         avg_value,
-        -- CPCB API returns CO in ug/m3 (e.g. 10-100), whereas CPCB NAQI standard expects mg/m3 (0-34).
-        -- We convert CO > 5.0 to mg/m3 by dividing by 100.0.
-        CASE 
-            WHEN pollutant_id = 'CO' AND avg_value > 5.0 THEN avg_value / 100.0
-            ELSE avg_value 
-        END AS norm_avg_value,
+        avg_value AS norm_avg_value,
         last_update,
         DATE_TRUNC('hour', last_update) AS hour_ts
     FROM stg

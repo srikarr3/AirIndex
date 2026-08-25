@@ -85,6 +85,10 @@ def init_db(db_path: str = DUCKDB_PATH):
     );
     """)
 
+    # 6. Seed Baseline Data if Empty
+    from src.seed_loader import seed_database_if_empty
+    seed_database_if_empty(conn)
+
     conn.close()
     print(f"Database schema initialized successfully at: {db_path}")
 

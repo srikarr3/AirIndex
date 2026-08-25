@@ -20,7 +20,13 @@ WITH source_data AS (
         UPPER(TRIM(pollutant_id)) AS pollutant_id,
         CAST(min_value AS DOUBLE) AS min_value,
         CAST(max_value AS DOUBLE) AS max_value,
-        CAST(avg_value AS DOUBLE) AS avg_value,
+        -- CPCB API returns CO in ug/m3 (e.g. 10-100), whereas CPCB NAQI standard expects mg/m3 (0-34).
+        -- Normalize CO values > 5.0 to mg/m3 at the dbt staging layer
+        CASE 
+            WHEN UPPER(TRIM(pollutant_id)) = 'CO' AND CAST(avg_value AS DOUBLE) > 5.0 
+            THEN CAST(avg_value AS DOUBLE) / 100.0
+            ELSE CAST(avg_value AS DOUBLE)
+        END AS avg_value,
         CAST(latitude AS DOUBLE) AS latitude,
         CAST(longitude AS DOUBLE) AS longitude,
         CAST(last_update AS TIMESTAMP) AS last_update,
@@ -35,3 +41,4 @@ WHERE avg_value IS NOT NULL
   AND city IS NOT NULL AND city != ''
   AND station IS NOT NULL AND station != ''
   AND pollutant_id IS NOT NULL AND pollutant_id != ''
+

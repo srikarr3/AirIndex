@@ -2,12 +2,14 @@ name: Hourly CPCB AQI Ingestion Pipeline
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # Runs every 2 hours
+    - cron: '0 * * * *'    # Runs every hour on the hour
   workflow_dispatch:        # Allows manual trigger via GitHub UI
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,3 +31,12 @@ jobs:
           RESOURCE_ID: ${{ secrets.RESOURCE_ID }}
         run: |
           python run_pipeline.py
+
+      - name: Commit & Push Updated DuckDB Database State
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add airindex.duckdb
+          git diff-index --quiet HEAD || git commit -m "auto: update hourly CPCB DuckDB snapshot [skip ci]"
+          git push
+
