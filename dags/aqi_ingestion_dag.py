@@ -1,3 +1,13 @@
+"""
+Apache Airflow DAG Reference Specification.
+
+Deployment Note:
+For cloud hosting on Streamlit Community Cloud, automated hourly ingestion, dbt model execution,
+and DuckDB state persistence is actively orchestrated via GitHub Actions (.github/workflows/pipeline.yml).
+This DAG is provided as an enterprise reference specification for production deployments with dedicated
+Airflow clusters (e.g. Astronomer, MWAA, or Managed Airflow).
+"""
+
 from datetime import datetime, timedelta
 import subprocess
 import os

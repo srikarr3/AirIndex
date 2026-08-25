@@ -18,7 +18,10 @@ if not DATA_GOV_IN_API_KEY:
         pass
 
 if not DATA_GOV_IN_API_KEY:
-    DATA_GOV_IN_API_KEY = "579b464db66ec23bdd000001fe81cc9be92741a86330c02f3f0e1586"
+    raise ValueError(
+        "DATA_GOV_IN_API_KEY is not set. Please define DATA_GOV_IN_API_KEY in your .env file, "
+        "environment variables, or Streamlit secrets."
+    )
 
 RESOURCE_ID = os.getenv("RESOURCE_ID", "3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69")
 BASE_API_URL = f"https://api.data.gov.in/resource/{RESOURCE_ID}"

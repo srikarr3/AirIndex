@@ -70,7 +70,9 @@ def parse_last_update(date_str):
 def fetch_all_bulk_records():
     """Fetches all India real-time AQI records in bulk pages from CPCB API."""
     from config import DATA_GOV_IN_API_KEY
-    api_key = DATA_GOV_IN_API_KEY or "579b464db66ec23bdd000001fe81cc9be92741a86330c02f3f0e1586"
+    api_key = DATA_GOV_IN_API_KEY
+    if not api_key:
+        raise ValueError("DATA_GOV_IN_API_KEY is not set.")
 
     session = get_resilient_session()
     all_records = []
@@ -142,15 +144,14 @@ def ingest_aqi_data(db_path: str = DUCKDB_PATH):
         try:
             conn.execute("""
                 INSERT INTO raw_aqi_readings 
-                (country, state, city, station, pollutant_id, min_value, max_value, avg_value, latitude, longitude, last_update)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (country, state, city, station, pollutant_id, min_value, max_value, avg_value, latitude, longitude, last_update, ingested_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
                 ON CONFLICT DO NOTHING;
             """, (country, state, norm_city, station, pollutant_id, min_val, max_val, avg_val, lat, lon, last_update))
             total_ingested += 1
         except Exception as e:
             total_skipped += 1
 
-    conn.execute("UPDATE raw_aqi_readings SET ingested_at = CURRENT_TIMESTAMP;")
     conn.close()
     print(f"Bulk Ingestion complete. Total inserted/updated: {total_ingested + total_skipped}")
     return total_ingested, total_skipped
@@ -163,18 +164,18 @@ def update_dim_stations(db_path: str = DUCKDB_PATH):
         INSERT INTO dim_stations (station, city, state, latitude, longitude, first_seen, last_seen)
         SELECT 
             station,
-            MAX(city) as city,
-            MAX(state) as state,
+            city,
+            state,
             AVG(latitude) as latitude,
             AVG(longitude) as longitude,
             MIN(last_update) as first_seen,
             MAX(last_update) as last_seen
         FROM raw_aqi_readings
         WHERE station IS NOT NULL AND station != ''
-        GROUP BY station
-        ON CONFLICT (station) DO UPDATE SET
-            city = EXCLUDED.city,
-            state = EXCLUDED.state,
+          AND city IS NOT NULL AND city != ''
+          AND state IS NOT NULL AND state != ''
+        GROUP BY state, city, station
+        ON CONFLICT (state, city, station) DO UPDATE SET
             latitude = EXCLUDED.latitude,
             longitude = EXCLUDED.longitude,
             last_seen = EXCLUDED.last_seen;

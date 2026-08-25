@@ -10,6 +10,7 @@ from ui.data import (
 from ui.components.header import render_header
 from ui.components.overview import render_overview
 from ui.components.city_detail import render_city_detail
+from ui.components.observability import render_observability_drawer
 
 # -----------------------------------------------------------------------------
 # 1. Page Configuration & Theme Initialization
@@ -99,12 +100,32 @@ st.sidebar.markdown("### ⚡ Live Pipeline Control")
 if st.sidebar.button("🔄 On-Demand Live Refresh", help="Triggers live CPCB API ingestion & dbt core execution inside demo session. Automatic hourly cron runs via GitHub Actions background workflow."):
     trigger_live_pipeline_refresh()
 
+render_observability_drawer()
+
 st.sidebar.markdown("---")
 st.sidebar.markdown("### ℹ️ Standard Information")
 st.sidebar.info(
     "**AQI Standard**: Official CPCB Breakpoint Method (India Standard 0–500).\n\n"
     "*Timezone*: Raw CPCB API UTC batch (`05:00 UTC`) converts to `10:30 AM IST`."
 )
+with st.sidebar.popover("📖 CPCB Breakpoints & Sources"):
+    st.markdown("""
+    **Official CPCB Sub-Index Breakpoint Matrix (µg/m³, CO in mg/m³)**:
+
+    | Category | AQI Range | PM₂.₅ | PM₁₀ | NO₂ | SO₂ | CO |
+    | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+    | **Good** | 0–50 | 0–30 | 0–50 | 0–40 | 0–40 | 0–1.0 |
+    | **Satisfactory** | 51–100 | 31–60 | 51–100 | 41–80 | 41–80 | 1.1–2.0 |
+    | **Moderate** | 101–200 | 61–90 | 101–250 | 81–180 | 81–380 | 2.1–10.0 |
+    | **Poor** | 201–300 | 91–120 | 251–350 | 181–280 | 381–800 | 10.1–17.0 |
+    | **Very Poor** | 301–400 | 121–250 | 351–430 | 281–400 | 801–1600 | 17.1–34.0 |
+    | **Severe** | 401–500 | >250 | >430 | >400 | >1600 | >34.0 |
+
+    ---
+    **Data Sources & References**:
+    - **API Endpoint**: [Central Pollution Control Board API on data.gov.in](https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69)
+    - **Authority**: Central Pollution Control Board (CPCB), MoEFCC, Govt. of India.
+    """)
 
 if selected_city.startswith("None ("):
     render_overview(selected_state)

@@ -41,7 +41,7 @@ def seed_database_if_empty(conn=None):
                 conn.execute("""
                 INSERT INTO dim_stations (station, city, state, latitude, longitude, first_seen, last_seen)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT (station) DO NOTHING;
+                ON CONFLICT (state, city, station) DO NOTHING;
                 """, [station, city, state, lat, lon, now_ts, now_ts])
             
             print(f"[Seed Loader] Seeded {len(BASELINE_STATIONS)} baseline stations.")

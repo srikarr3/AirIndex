@@ -51,14 +51,20 @@ def init_db(db_path: str = DUCKDB_PATH):
     # 3. Table: dim_stations
     conn.execute("""
     CREATE TABLE IF NOT EXISTS dim_stations (
-        station TEXT PRIMARY KEY,
+        station TEXT NOT NULL,
         city TEXT NOT NULL,
         state TEXT NOT NULL,
         latitude DOUBLE,
         longitude DOUBLE,
         first_seen TIMESTAMP NOT NULL,
-        last_seen TIMESTAMP NOT NULL
+        last_seen TIMESTAMP NOT NULL,
+        PRIMARY KEY (state, city, station)
     );
+    """)
+
+    conn.execute("""
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_dim_stations_composite 
+    ON dim_stations (state, city, station);
     """)
 
     # 4. Table: fact_city_aqi_hourly
