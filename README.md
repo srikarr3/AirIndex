@@ -1,6 +1,6 @@
-# 🌫️ AirIndex India — Production AQI Pipeline & Dashboard
+# 🌫️ AirIndex India — AQI Pipeline & Dashboard
 
-A production-grade, real-time Air Quality Index (AQI) intelligence system and Streamlit dashboard monitoring Indian cities. Powered by official **Central Pollution Control Board (CPCB)** data from `data.gov.in`, **DuckDB**, **dbt core**, and **Apache Airflow / GitHub Actions**.
+A nearly real-time Air Quality Index (AQI) system and Streamlit dashboard monitoring Indian cities. Powered by official **Central Pollution Control Board (CPCB)** data from `data.gov.in`, **DuckDB**, **dbt core**, and **Apache Airflow / GitHub Actions**.
 
 ---
 
