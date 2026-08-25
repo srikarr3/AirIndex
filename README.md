@@ -80,24 +80,24 @@ When evaluating or discussing this project during technical interviews, the foll
 
 ```
 airindex/
-├── .github/workflows/      # Hourly GitHub Actions pipeline execution & DuckDB state persistence
-├── app.py                  # Lightweight Streamlit application entrypoint (< 150 lines)
-├── config.py               # Shared project configurations & constants
-├── dags/                   # Production Apache Airflow DAGs (out-of-band pipeline)
-├── dbt_airindex/           # dbt core transformations (Staging, Intermediate, Marts)
+├── .github/workflows/
+├── app.py
+├── config.py
+├── dags/
+├── dbt_airindex/
 │   ├── models/
-│   │   ├── staging/        # stg_aqi_readings.sql (CO normalization & deduplication)
-│   │   ├── intermediate/   # int_pollutant_subindex.sql (CPCB Breakpoint calculation)
-│   │   └── marts/          # fact_city_aqi_hourly.sql & fact_city_aqi_daily.sql
-├── run_pipeline.py         # End-to-end Python pipeline runner script
-├── src/                    # Ingestion, schema initialization & advisory generation
-│   ├── db.py               # DuckDB connection manager & table schema creator
-│   ├── genai_advisory.py   # Daily health advisory engine
-│   ├── ingest_cpcb.py      # Real CPCB API batch ingestion
-│   └── seed_loader.py      # Baseline seed dataset loader for cloud boot resilience
-└── ui/                     # Modular presentation package
-    ├── components/         # Reusable UI views (header, overview, city detail, architecture drawer)
-    ├── data.py             # Cached database query loaders (@st.cache_data)
-    ├── icons.py            # Pixel-aligned 24x24 SVG icon helpers
-    └── theme.py            # Glassmorphic dark theme CSS definitions
+│   │   ├── staging/
+│   │   ├── intermediate/
+│   │   └── marts/
+├── run_pipeline.py
+├── src/
+│   ├── db.py
+│   ├── genai_advisory.py
+│   ├── ingest_cpcb.py
+│   └── seed_loader.py
+└── ui/
+    ├── components/
+    ├── data.py
+    ├── icons.py
+    └── theme.py
 ```
