@@ -1,0 +1,31 @@
+# Environment and API keys
+.env
+.env.local
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# DuckDB Database binary (will auto-generate on first run)
+*.duckdb
+*.duckdb.wal
+
+# dbt build artifacts
+dbt_airindex/target/
+dbt_airindex/dbt_packages/
+dbt_airindex/logs/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

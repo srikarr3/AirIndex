@@ -1,0 +1,31 @@
+name: Hourly CPCB AQI Ingestion Pipeline
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # Runs every 2 hours
+  workflow_dispatch:        # Allows manual trigger via GitHub UI
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run CPCB Data Ingestion & dbt Transformations
+        env:
+          DATA_GOV_IN_API_KEY: ${{ secrets.DATA_GOV_IN_API_KEY }}
+          RESOURCE_ID: ${{ secrets.RESOURCE_ID }}
+        run: |
+          python run_pipeline.py

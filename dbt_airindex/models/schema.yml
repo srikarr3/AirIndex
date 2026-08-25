@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: fact_city_aqi_hourly
+    description: "Hourly AQI rollup and CPCB category per city."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+      - name: hour_ts
+        data_tests:
+          - not_null
+      - name: overall_aqi
+        data_tests:
+          - not_null
+      - name: category
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Good', 'Satisfactory', 'Moderate', 'Poor', 'Very Poor', 'Severe']
+
+  - name: fact_city_aqi_daily
+    description: "Daily AQI summary per city."
+    columns:
+      - name: city
+        data_tests:
+          - not_null
+      - name: date
+        data_tests:
+          - not_null
+      - name: avg_aqi
+        data_tests:
+          - not_null
+      - name: category
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Good', 'Satisfactory', 'Moderate', 'Poor', 'Very Poor', 'Severe']

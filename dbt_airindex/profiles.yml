@@ -1,0 +1,7 @@
+dbt_airindex:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../airindex.duckdb"
+      threads: 4

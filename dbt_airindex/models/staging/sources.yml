@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: main
+    database: airindex
+    schema: main
+    tables:
+      - name: raw_aqi_readings
+      - name: dim_stations
